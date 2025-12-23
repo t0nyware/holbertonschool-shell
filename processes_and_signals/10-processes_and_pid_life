@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#
+PID_FILE="/var/run/myscript.pid"
+
+# PID-ni fayla yaz
+echo "$$" > "$PID_FILE"
+
+# SIGTERM: mesaj ver, PID file sil, çıx
+term_handler() {
+    echo "I hate the kill command"
+    rm -f "$PID_FILE"
+    exit 0
+}
+
+# SIGINT (Ctrl+C): yalnız mesaj ver
+int_handler() {
+    echo "Y U no love me?!"
+}
+
+# SIGQUIT: PID file sil və çıx
+quit_handler() {
+    rm -f "$PID_FILE"
+    exit 0
+}
+
+trap term_handler SIGTERM
+trap int_handler SIGINT
+trap quit_handler SIGQUIT
+
+while true
+do
+    echo "To infinity and beyond"
+    sleep 2
+done
+
